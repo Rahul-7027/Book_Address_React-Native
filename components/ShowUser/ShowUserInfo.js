@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react'
-import { FlatList, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import ModalData from '../ModalData/ModalData';
 
 
@@ -9,7 +9,6 @@ const ShowUserInfo = () => {
   const [data, setData] = useState([]);
   const [modal, setModal] = useState(false)
   const [currData, setCurrData] = useState(null)
-  console.log("Data", data)
 
   const getData = async () => {
     const storedData = await AsyncStorage.getItem("book");
@@ -19,7 +18,7 @@ const ShowUserInfo = () => {
 
   useEffect(() => {
     getData()
-  }, [])
+  }, [data])
 
   const handleDelete = async (email) => {
     const deleteData = data.filter((item) => item.email !== email)
@@ -47,8 +46,6 @@ const ShowUserInfo = () => {
 
   return (
     <View>
-      {/* <Text style={{ textAlign: "center",fontSize:20,margin:20 }}>Show User Info</Text> */}
-
       {/* Table Header */}
       <View style={styles.row}>
         <Text style={[styles.cell, styles.header]}>Name</Text>
@@ -60,37 +57,38 @@ const ShowUserInfo = () => {
 
 
 
-      <FlatList
-        data={data}
-        // keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.row} key={item.email}>
-            <Text style={styles.cell}>{item.name.charAt(0).toUpperCase() + item.name.slice(1)}</Text>
-            <Text style={styles.cell}>{item.email}</Text>
-            <Text style={styles.cell}>{item.phone}</Text>
-            <Text style={styles.cell}>{item.address}</Text>
-            <View style={styles.actionButtons}>
-              <TouchableOpacity style={styles.editBtn} onPress={() => handledit(item)}>
-                <Text style={styles.editText}>Edit</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.deleteBtn} onPress={() => handleDelete(item.email)}>
-                <Text style={styles.deleteText}>Delete</Text>
-              </TouchableOpacity>
+      {data.length == 0 ? (<View ><Text style={styles.datanull}>No data</Text></View>) :
+        (<FlatList
+          data={data}
+          renderItem={({ item }) => (
+            <View style={styles.row} key={item.email}>
+              <Text style={styles.cell}>{item.name.charAt(0).toUpperCase() + item.name.slice(1)}</Text>
+              <Text style={styles.cell}>{item.email}</Text>
+              <Text style={styles.cell}>{item.phone}</Text>
+              <Text style={styles.cell}>{item.address}</Text>
+              <View style={styles.actionButtons}>
+                <TouchableOpacity style={styles.editBtn} onPress={() => handledit(item)}>
+                  <Text style={styles.editText}>Edit</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.deleteBtn} onPress={() => handleDelete(item.email)}>
+                  <Text style={styles.deleteText}>Delete</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        )}
-      />
+          )}
+        />)
+      }
 
+      {modal && (
+        <ModalData
+          currData={currData}
+          setCurrData={setCurrData}
+          handleSave={handleSave}
+          handleClose={() => setModal(false)}
+          modal={modal}
+        />
+      )}
 
-{modal && (
-  <ModalData
-    currData={currData}
-    setCurrData={setCurrData}
-    handleSave={handleSave}
-    handleClose={() => setModal(false)}
-    modal={modal}
-  />
-)}
       {/* <Modal
         visible={modal}
         transparent={true}
@@ -151,6 +149,10 @@ const ShowUserInfo = () => {
 }
 
 const styles = StyleSheet.create({
+  datanull: {
+    textAlign: "center",
+    fontSize: 20,
+  },
   container: {
     flex: 1,
     padding: 20,
