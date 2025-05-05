@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react'
 import { FlatList, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import ModalData from '../ModalData/ModalData';
 
 
 const ShowUserInfo = () => {
@@ -18,7 +19,7 @@ const ShowUserInfo = () => {
 
   useEffect(() => {
     getData()
-  }, [data])
+  }, [])
 
   const handleDelete = async (email) => {
     const deleteData = data.filter((item) => item.email !== email)
@@ -81,7 +82,16 @@ const ShowUserInfo = () => {
       />
 
 
-      <Modal
+{modal && (
+  <ModalData
+    currData={currData}
+    setCurrData={setCurrData}
+    handleSave={handleSave}
+    handleClose={() => setModal(false)}
+    modal={modal}
+  />
+)}
+      {/* <Modal
         visible={modal}
         transparent={true}
         animationType="slide"
@@ -132,7 +142,7 @@ const ShowUserInfo = () => {
             </View>
           </View>
         )}
-      </Modal>
+      </Modal> */}
 
 
 

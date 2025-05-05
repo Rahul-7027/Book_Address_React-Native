@@ -1,5 +1,5 @@
 import React from 'react'
-import NavBottom from './omponents/TabNavigation/NavBottom'
+import NavBottom from './components/TabNavigation/NavBottom'
 
 function App() {
   return (
