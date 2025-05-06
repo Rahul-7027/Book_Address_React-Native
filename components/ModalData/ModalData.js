@@ -46,7 +46,7 @@ const ModalData = (props) => {
                 />
     
                 <View style={styles.actionButtons}>
-                  <TouchableOpacity style={styles.editBtn} onPress={() => setModal(false)}>
+                  <TouchableOpacity style={styles.editBtn} onPress={props.handleClose}>
                     <Text style={styles.editText}>Close</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.deleteBtn} onPress={props.handleSave}>
